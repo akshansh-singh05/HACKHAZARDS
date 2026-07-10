@@ -39,7 +39,7 @@ if os.getenv("VERCEL") == "1":
     DB_PATH = Path("/tmp") / "sustainable_shopper.db"
 else:
     DB_PATH = BASE_DIR / "backend" / "sustainable_shopper.db"
-SEED_PATH = BASE_DIR / "data" / "seed_products.json"
+SEED_PATH = Path(__file__).resolve().parent / "seed_products.json"
 FRONTEND_DIR = BASE_DIR / "frontend"
 FRONTEND_INDEX = FRONTEND_DIR / "index.html"
 
