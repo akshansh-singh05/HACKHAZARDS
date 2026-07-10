@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run backend (Python)",
+      "type": "shell",
+      "command": "C:/Python314/python.exe",
+      "args": ["${workspaceFolder}\\backend\\app.py"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "shared",
+        "clear": false
+      }
+    }
+  ]
+}

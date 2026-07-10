@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Organic Cotton T-Shirt",
+    "category": "fashion",
+    "price": 24.99,
+    "carbon_kg": 1.8,
+    "water_liters": 320.0,
+    "description": "Low-impact everyday essential made from organic cotton."
+  },
+  {
+    "name": "Recycled Sneakers",
+    "category": "fashion",
+    "price": 74.99,
+    "carbon_kg": 2.3,
+    "water_liters": 260.0,
+    "description": "Everyday sneakers built with recycled materials."
+  },
+  {
+    "name": "Plant-Based Burger Pack",
+    "category": "food",
+    "price": 12.49,
+    "carbon_kg": 1.2,
+    "water_liters": 180.0,
+    "description": "Protein-packed alternative with a smaller footprint."
+  },
+  {
+    "name": "Seasonal Veggie Basket",
+    "category": "food",
+    "price": 15.99,
+    "carbon_kg": 0.9,
+    "water_liters": 95.0,
+    "description": "Seasonal produce basket sourced from local farms."
+  },
+  {
+    "name": "Refillable Cleaning Kit",
+    "category": "home",
+    "price": 29.99,
+    "carbon_kg": 1.0,
+    "water_liters": 110.0,
+    "description": "Reusable cleaning system that reduces plastic waste."
+  },
+  {
+    "name": "LED Desk Lamp",
+    "category": "home",
+    "price": 34.99,
+    "carbon_kg": 1.5,
+    "water_liters": 85.0,
+    "description": "Energy-efficient lighting for a lower footprint."
+  },
+  {
+    "name": "Fair-Trade Coffee Bag",
+    "category": "food",
+    "price": 16.49,
+    "carbon_kg": 1.4,
+    "water_liters": 140.0,
+    "description": "Ethically sourced coffee with sustainability transparency."
+  },
+  {
+    "name": "Bamboo Toothbrush Set",
+    "category": "home",
+    "price": 9.99,
+    "carbon_kg": 0.4,
+    "water_liters": 30.0,
+    "description": "Simple swap for daily routines with a smaller footprint."
+  }
+]

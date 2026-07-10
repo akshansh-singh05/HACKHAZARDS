@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personalized Sustainable Shopping Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="background-orb orb-one"></div>
+    <div class="background-orb orb-two"></div>
+
+    <!-- Auth overlay: shown when the user is not logged in -->
+    <div id="authOverlay" class="modal" aria-hidden="true">
+      <div class="modal-content auth-content">
+        <h3 id="authTitle">Log in</h3>
+        <p id="authError" class="auth-error" role="alert"></p>
+        <form id="authForm">
+          <div id="authNameField" class="auth-field" hidden>
+            <label for="authName">Name</label>
+            <input id="authName" type="text" autocomplete="name" placeholder="Ada Lovelace" />
+          </div>
+          <div class="auth-field">
+            <label for="authEmail">Email</label>
+            <input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com" />
+          </div>
+          <div class="auth-field">
+            <label for="authPassword">Password</label>
+            <input id="authPassword" type="password" autocomplete="current-password" required placeholder="At least 8 characters" minlength="8" />
+          </div>
+          <button id="authSubmit" class="primary-action" type="submit">Log in</button>
+        </form>
+        <button id="authToggle" class="auth-toggle" type="button">
+          Need an account? Sign up
+        </button>
+        <p class="auth-demo-hint">Demo login: demo@example.com / demo1234</p>
+      </div>
+    </div>
+
+    <main class="shell" id="appShell" hidden>
+      <div class="account-bar">
+        <span id="accountGreeting"></span>
+        <button id="logoutButton" class="auth-toggle" type="button">Log out</button>
+      </div>
+      <section class="hero card">
+        <div>
+          <p class="eyebrow">Climate & Sustainability Systems</p>
+          <h1>Personalized Sustainable Shopping Assistant</h1>
+          <p class="hero-copy">
+            Search greener products, track the carbon and water impact of your purchases,
+            and see how future choices shape your footprint.
+          </p>
+          <div class="hero-badges">
+            <span>Live search</span>
+            <span>Impact forecast</span>
+            <span>Demo-ready data</span>
+          </div>
+          <div class="hero-actions">
+            <button id="demoRunButton" class="primary-action" type="button">Run guided demo</button>
+            <span id="demoStatus" class="demo-status" aria-live="polite">Ready for the demo flow.</span>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span>Carbon saved</span>
+            <strong id="carbonSaved">--</strong>
+          </div>
+          <div class="stat">
+            <span>Water saved</span>
+            <strong id="waterSaved">--</strong>
+          </div>
+          <div class="stat">
+            <span>Forecast mode</span>
+            <strong>Live</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-banner card">
+        <div>
+          <strong>Demo mode enabled</strong>
+          <p>Open the dashboard, click a product, and the forecast updates instantly.</p>
+        </div>
+        <div class="demo-banner-chip">Seeded shopping history loaded</div>
+      </section>
+
+      <section class="controls card">
+        <div class="search-box">
+          <label for="searchInput">Search products</label>
+          <input id="searchInput" list="searchSuggestions" type="search" placeholder="Try 'coffee' or 'shirt'" />
+          <datalist id="searchSuggestions"></datalist>
+        </div>
+        <div>
+          <label>Filter by category</label>
+          <div id="categoryFilters" class="filters"></div>
+        </div>
+        <div class="price-filter">
+          <label>Filter by price</label>
+          <div class="price-filter-inputs">
+            <div class="price-field">
+              <span>Min</span>
+              <input id="minPriceInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="$0" />
+            </div>
+            <span class="price-filter-sep">–</span>
+            <div class="price-field">
+              <span>Max</span>
+              <input id="maxPriceInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Any" />
+            </div>
+            <button id="clearPriceFilter" class="link-button" type="button" hidden>Clear</button>
+          </div>
+          <p id="priceFilterError" class="auth-error" role="alert"></p>
+        </div>
+        <div class="score-filter">
+          <div class="score-filter-head">
+            <label for="minScoreSlider">Filter by sustainability score</label>
+            <span id="scoreFilterValue" class="score-filter-value">1 – 100</span>
+            <button id="clearScoreFilter" class="link-button" type="button" hidden>Clear</button>
+          </div>
+          <div class="score-filter-sliders">
+            <div class="score-slider-row">
+              <span>Min</span>
+              <input id="minScoreSlider" type="range" min="1" max="100" step="1" value="1" />
+            </div>
+            <div class="score-slider-row">
+              <span>Max</span>
+              <input id="maxScoreSlider" type="range" min="1" max="100" step="1" value="100" />
+            </div>
+          </div>
+          <p id="scoreFilterError" class="auth-error" role="alert"></p>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card panel">
+          <div class="panel-head">
+            <h2>Top Green Choices</h2>
+            <p>Products ranked by lower carbon and water impact.</p>
+          </div>
+          <div id="productsGrid" class="products-grid"></div>
+        </div>
+
+        <div class="stacked">
+          <section class="card panel">
+            <div class="panel-head">
+              <div class="panel-head-row">
+                <h2>Eco Badges</h2>
+                <span id="badgeCount" class="badge-count">-- / --</span>
+              </div>
+              <p>Milestones earned from the CO2, water, and sustainability score you've saved.</p>
+            </div>
+            <div id="badgesGrid" class="badges-grid"></div>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <div class="panel-head-row">
+                <h2>Monthly Dashboard</h2>
+                <div class="panel-head-actions">
+                  <button id="exportMonthlyImpactButton" class="clear-all-button" type="button">Export CSV</button>
+                  <button id="exportPdfReportButton" class="clear-all-button" type="button">Download PDF Report</button>
+                </div>
+              </div>
+              <p>Track your sustainability savings over time.</p>
+            </div>
+            <div class="dashboard-summary">
+              <div>
+                <span>Total CO2</span>
+                <strong id="totalCo2">--</strong>
+              </div>
+              <div>
+                <span>Total water</span>
+                <strong id="totalWater">--</strong>
+              </div>
+              <div>
+                <span>Purchases</span>
+                <strong id="purchaseCount">--</strong>
+              </div>
+            </div>
+            <canvas id="dashboardChart" height="190"></canvas>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <h2>Impact Forecast</h2>
+              <p>Simple predictions based on recent purchase behavior.</p>
+            </div>
+            <div id="forecastSummary" class="forecast-summary"></div>
+            <canvas id="forecastChart" height="190"></canvas>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <h2>Favorites</h2>
+              <p>Your saved items live here with prices.</p>
+            </div>
+            <div id="favoritesList" class="account-list"></div>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <h2>Carts</h2>
+              <p><span id="cartCount">0 items</span> waiting to be purchased.</p>
+            </div>
+            <div id="cartsList" class="account-list"></div>
+            <div class="cart-summary">
+              <div>
+                <span>Total items</span>
+                <strong id="cartTotalItems">0</strong>
+              </div>
+              <div>
+                <span>Total price</span>
+                <strong id="cartTotalPrice">$0.00</strong>
+              </div>
+            </div>
+            <button id="cartBuyNowButton" class="primary-action" type="button">Buy Now</button>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <div class="panel-head-row">
+                <h2>Purchase History</h2>
+                <div class="panel-head-actions">
+                  <button id="exportPurchaseHistoryButton" class="clear-all-button" type="button">Export CSV</button>
+                  <button id="historyClearAllButton" class="clear-all-button" type="button">Clear All</button>
+                </div>
+              </div>
+              <p>Every item you added to history, with quantity and price. Removing items here only clears this view — your saved stats, badges, and charts stay accurate.</p>
+            </div>
+            <div id="historyList" class="account-list"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <template id="productTemplate">
+      <article class="product-card">
+        <div class="product-meta">
+          <span class="pill category"></span>
+          <span class="pill score"></span>
+        </div>
+        <h3 class="name"></h3>
+        <div class="rating-summary card-rating"></div>
+        <p class="description"></p>
+        <div class="metrics">
+          <span class="metric"></span>
+          <span class="metric"></span>
+          <span class="metric"></span>
+        </div>
+        <div class="card-actions">
+          <button class="favorite-button" title="Add to favorites">♡</button>
+          <button class="cart-button">Add to Cart</button>
+          <button class="buy-button">Buy Now</button>
+        </div>
+      </article>
+    </template>
+
+    <template id="badgeTemplate">
+      <article class="badge-card">
+        <div class="badge-icon"></div>
+        <div class="badge-body">
+          <h4 class="badge-name"></h4>
+          <p class="badge-description"></p>
+          <div class="badge-progress-track">
+            <div class="badge-progress-fill"></div>
+          </div>
+          <div class="badge-progress-label"></div>
+        </div>
+        <div class="badge-status"></div>
+      </article>
+    </template>
+
+    <!-- Product detail modal -->
+    <div id="productModal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <button id="modalClose" class="modal-close">×</button>
+        <h3 id="modalName">Product</h3>
+        <p id="modalDescription"></p>
+        <div id="modalMetrics"></div>
+        <div id="modalBreakdown" class="modal-breakdown"></div>
+        <div id="modalTip" class="modal-tip"></div>
+        <div>
+          <strong>Related greener options</strong>
+          <ul id="modalRelated" class="modal-related"></ul>
+        </div>
+        <div class="modal-actions">
+          <button id="modalBuy" class="buy-button">Buy Now</button>
+          <button id="modalAddToCart" class="cart-button">Add to Cart</button>
+          <button id="modalFavorite" class="favorite-button">♡ Favorite</button>
+        </div>
+
+        <section class="modal-reviews">
+          <div class="reviews-header">
+            <strong>Reviews</strong>
+            <span id="modalRatingSummary" class="rating-summary"></span>
+          </div>
+
+          <div id="modalReviewForm" class="review-form">
+            <label id="reviewFormLabel" for="reviewStarsInput">Your rating</label>
+            <div id="reviewStarsInput" class="star-input" role="radiogroup" aria-labelledby="reviewFormLabel"></div>
+            <textarea id="reviewTextInput" rows="3" maxlength="2000" placeholder="Share what you thought of this product (optional)"></textarea>
+            <p id="reviewFormError" class="auth-error" role="alert"></p>
+            <div class="review-form-actions">
+              <button id="reviewSubmitButton" class="primary-action" type="button">Submit review</button>
+              <button id="reviewDeleteButton" class="link-button" type="button" hidden>Delete my review</button>
+            </div>
+          </div>
+
+          <div id="modalReviewsList" class="reviews-list"></div>
+        </section>
+      </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
