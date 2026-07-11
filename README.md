@@ -102,10 +102,10 @@ docker run -p 8000:8000 -e PORT=8000 sustainable-shopper:latest
 
 - Set `JWT_SECRET` in production for secure authentication.
 - The app respects `HOST` and `PORT`, so it can run in containers and cloud environments.
-- Gunicorn start command:
+- Railway will now use the root-level `Dockerfile`, which starts the app with:
 
 ```bash
-gunicorn -w 4 -b 0.0.0.0:$PORT app:app
+gunicorn -w 4 -b 0.0.0.0:$PORT backend.app:app
 ```
 
 ## 🔮 Future Improvements
