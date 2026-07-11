@@ -1,10 +1,13 @@
-const API_BASE = (() => {
-  const configuredBase = window.API_BASE_URL || window.__API_BASE_URL__;
-  if (configuredBase) {
-    return String(configuredBase).replace(/\/$/, "");
-  }
-  return "/api";
-})();
+// const API_BASE = (() => {
+//   const configuredBase = window.API_BASE_URL || window.__API_BASE_URL__;
+//   if (configuredBase) {
+//     return String(configuredBase).replace(/\/$/, "");
+//   }
+//   return "/api";
+// })();
+
+const API_BASE = "https://hackhazards-backend-ivoj.onrender.com/api";
+
 const TOKEN_KEY = "sst_token";
 
 function getToken() {
