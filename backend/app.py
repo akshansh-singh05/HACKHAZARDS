@@ -46,6 +46,20 @@ FRONTEND_INDEX = FRONTEND_DIR / "index.html"
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="/static")
 
 
+@app.after_request
+def add_cors_headers(response: Response) -> Response:
+    origin = request.headers.get("Origin")
+    allowed_origin = os.getenv("CORS_ORIGIN", "*")
+    if allowed_origin == "*":
+        response.headers["Access-Control-Allow-Origin"] = "*"
+    elif origin and origin == allowed_origin:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Vary"] = "Origin"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    return response
+
+
 def category_tip(category: str) -> str:
     tips = {
         "food": "Choose seasonal and local produce to reduce transport emissions.",
